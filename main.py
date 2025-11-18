@@ -119,74 +119,8 @@ class Automato:
             else:
                 raise ValueError(f"Símbolo não pertence ao alfabeto da pilha: {simbolo}")
 
+
     def inserirTransicao(self, estadoOrigem, lidoFita, lidoPilha, novoEstado, palavraGravadaPilha):
-        # verificar se estados existem
-        # verificar se símbolo fita existe 
-        # verificar se símbolo pilha existe
-
-        if estadoOrigem not in self.estados or novoEstado not in self.estados:
-            raise ValueError("Estado origem ou destino não existe")
-        if lidoFita not in self.alfabeto and lidoFita not in self.RESERVADOS:
-            raise ValueError(f"Símbolo {lidoFita} não pertence ao alfabeto")
-        if lidoPilha not in self.alfabetoPilha and lidoPilha not in self.RESERVADOS:
-            raise ValueError(f"Símbolo {lidoPilha} não pertence ao alfabeto de pilha")
-
-        # verificar se a informação a ser inserida na pilha é válida. Símbolos reservados só podem ocorrer se a palavra for 1 caractere
-        if len(palavraGravadaPilha) > 1:
-            for simbolo in palavraGravadaPilha:
-                if simbolo not in self.alfabetoPilha or simbolo in self.RESERVADOS:
-                    raise ValueError(f"Símbolo {simbolo} não pertence ao alfabeto da pilha")
-        elif palavraGravadaPilha not in self.alfabetoPilha and palavraGravadaPilha not in self.RESERVADOS:
-            raise ValueError(f"Símbolo {palavraGravadaPilha} não pertence ao alfabeto da pilha")
-
-            
-        chave = (estadoOrigem, lidoFita, lidoPilha)
-
-        # verificar o determinismo: o ε não permite inserção de qualquer outro simbolo. Inserção do símbolo ε só é perminitda se 
-        # for a primeira transição para dada combinação de estado E topo da pilha. 
-        # Diferentemente, o ? não quebra o determinismo
-        verificarND = {}
-        for (estadoExistente, simboloExistente, pilhaExistente) in self.transicoes.keys():
-            if estadoExistente != estadoOrigem:
-                continue
-
-            # Se existe uma transição que não lê nada na fita e na pilha, não pode exisitir outra transição para o mesmo estado 
-            # pois causará, necessariamente, conflito não determinístico.
-            # De maneira semelhante, se, para um mesmo estado, o ε aparecer em símbolo da fita e, apesar de ser em outra transição, 
-            # aparecer em símbolo lido da pilha, ocorre não determinismo.
-            if estadoExistente not in verificarND:
-                verificarND[estadoExistente] = {'fita': False, 'pilha': False}
-
-            if lidoFita == 'ε' or simboloExistente == 'ε':
-                verificarND[estadoExistente]['fita'] = True
-
-            if lidoPilha == 'ε' or pilhaExistente == 'ε':
-                verificarND[estadoExistente]['pilha'] = True
-            
-            if verificarND[estadoExistente]['fita'] == True and verificarND[estadoExistente]['pilha'] == True:
-                raise ValueError("Conflito não deterministico por conta do ε")
-            
-            
-            if pilhaExistente == lidoPilha:
-                if simboloExistente == lidoFita:                
-                    raise ValueError("Transição duplicada")
-                
-                if lidoFita == 'ε' or simboloExistente == 'ε':
-                    raise ValueError("Conflito não deterministico por conta do ε")
-            
-            if simboloExistente == lidoFita:
-                if lidoPilha == pilhaExistente:
-                    raise ValueError("Transição duplicada")   
-                
-                if lidoPilha == 'ε' or pilhaExistente == 'ε':
-                    raise ValueError("Conflito não deterministico por conta do ε")
-                
-        self.transicoes[chave] = (novoEstado, palavraGravadaPilha)
-
-
-
-
-    def inserirTransicao2(self, estadoOrigem, lidoFita, lidoPilha, novoEstado, palavraGravadaPilha):
         # verificar se estados existem
         # verificar se símbolo fita existe 
         # verificar se símbolo pilha existe
@@ -352,20 +286,20 @@ def casosTeste():
 
     # Casos de não determinismo
     # 1:
-    #automato.inserirTransicao2('q2', 'ε', 'X', 'q0', 'X')
-    #automato.inserirTransicao2('q2', 'a', 'X', 'q0', 'ε')
+    #automato.inserirTransicao('q2', 'ε', 'X', 'q0', 'X')
+    #automato.inserirTransicao('q2', 'a', 'X', 'q0', 'ε')
 
     # 2:
-    #automato.inserirTransicao2('q2', 'b', 'X', 'q0', 'X')
-    #automato.inserirTransicao2('q2', 'b', 'ε', 'q0', 'ε')
+    #automato.inserirTransicao('q2', 'b', 'X', 'q0', 'X')
+    #automato.inserirTransicao('q2', 'b', 'ε', 'q0', 'ε')
 
     # 3:
-    #automato.inserirTransicao2('q2', 'b', 'X', 'q0', 'X')
-    #automato.inserirTransicao2('q2', 'ε', 'ε', 'q0', 'ε')
+    #automato.inserirTransicao('q2', 'b', 'X', 'q0', 'X')
+    #automato.inserirTransicao('q2', 'ε', 'ε', 'q0', 'ε')
 
     # 4:
-    #automato.inserirTransicao2('q2', 'b', 'ε', 'q0', 'X')
-    #automato.inserirTransicao2('q2', 'ε', 'X', 'q0', 'ε')
+    #automato.inserirTransicao('q2', 'b', 'ε', 'q0', 'X')
+    #automato.inserirTransicao('q2', 'ε', 'X', 'q0', 'ε')
 
     resultado = automato.calcularPassos("ababa")
     print(f"\nResultado para 'ababa': {resultado}")
