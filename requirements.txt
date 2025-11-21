@@ -1,0 +1,2 @@
+graphviz==0.21
+nicegui==3.3.1
