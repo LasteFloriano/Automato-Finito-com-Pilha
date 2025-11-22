@@ -162,6 +162,10 @@ class Automato:
     
     # faz todos os passos e armazena na lista
     def calcularPassos(self, palavra):
+        for simbolo in palavra:
+            if simbolo not in self.alfabeto:
+                raise ValueError("Palavra não pertence ao alfabeto")
+
         self.fita = palavra
         self.resetar()
         contador = 0
