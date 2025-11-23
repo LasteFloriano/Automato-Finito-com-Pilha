@@ -152,8 +152,8 @@ class Automato:
     def obterTransicao(self, lidoFita, lidoPilha):
         return self.transicoes.get((self.estadoAtual, lidoFita, lidoPilha))         # retorna None se a chave não existir 
     
-    def removerTransicao(self, estadoOrgigem, lidoFita, lidoPilha):
-        chave = (estadoOrgigem, lidoFita, lidoPilha)
+    def removerTransicao(self, estadoOrigem, lidoFita, lidoPilha):
+        chave = (estadoOrigem, lidoFita, lidoPilha)
         if chave in self.transicoes:
             del self.transicoes[chave]
         else:

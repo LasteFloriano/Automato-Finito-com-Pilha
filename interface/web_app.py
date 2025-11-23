@@ -35,19 +35,20 @@ automato.inserirTransicao('q1', '?', 'ε', 'qf', 'ε')
 
 
 
-def gerar(grafo):
-        svg = gerarSvgAutomato(automato)
-        grafo.set_content(svg)
+# nd
+#(q2, ε, X, q0, X), (q2, a, X, q0, ε)
+#(q2, b, ε, q0, X), (q2, ε, X, q0, X)
+
+
 
 @ui.page('/')
 def index():
 
     def gerarAutomato():
         global automato
-        # preciso aplicar rollback manual :D
         print(f"estados = {automato.estados}")
         try:
-            # Impede do automato antigo ser receber alterações inválidas em caso de erro
+            # Impede do automato antigo de receber alterações inválidas em caso de erro
             # Se quiser que as informações antigas importem, o tempo precisa ser copia do principal.
             automatoTemp = Automato()
 
@@ -67,32 +68,26 @@ def index():
             print(listaTransicoes)
 
 
-            # inserir estados
             estados = [e.strip() for e in i_estados.value.split(',')]
             print(estados)
             automatoTemp.inserirEstados(*estados)
 
-            #inserir estado inicial
             print(estadoInicial)
             automatoTemp.inserirEstadoInicial(estadoInicial)
 
-            #inserir estados finais
             estadosFinais = [e.strip() for e in i_estadosFinais.value.split(',')]
             print(estadosFinais)
             automatoTemp.inserirEstadosFinais(*estadosFinais)
 
 
-            #inserir alfabeto fita
             alfabetofita = [s.strip() for s in i_alfabetoFita.value.split(',')]
             print(alfabetofita)
             automatoTemp.inserirAlfabeto(*alfabetofita)
 
-            #inserir alfabeto pilha
             alfabetoPilha = [s.strip() for s in i_alfabetoPilha.value.split(',')]
             print(alfabetoPilha)
             automatoTemp.inserirAlfabetoPilha(*alfabetoPilha)
 
-            #inserir transicoes
             for transicao in listaTransicoes:
                 estadoOrigem = transicao[0]
                 simboloFita = transicao[1]
@@ -113,9 +108,9 @@ def index():
         except ValueError as e:
             ui.notify(e)
 
-    with ui.grid(columns=2).classes('items-center'):
-        ui.label("Estados")
-        i_estados = ui.input("Separados por vírgula")
+    with ui.column().classes("border p-4 rounded"):
+        ui.label("Estados: ")
+        i_estados = ui.input("Separados por vírgula").classes('w-64')
 
         ui.label("Estado inicial:")
         i_estadoInicial = ui.input('Apenas 1', validation={
@@ -136,7 +131,6 @@ def index():
         i_transicoes = ui.input("(Origem, Fita, Pilha, Destino, Empilha), (Origem, Fita, Pilha, Destino, Empilha)")
 
 
-    ui.space().classes("h-16")
 
     ui.button("Gerar Autômato", on_click=gerarAutomato)
     ui.button ("Caso Teste", on_click=lambda: ui.navigate.to('/automato'))
@@ -144,7 +138,6 @@ def index():
 
 @ui.page('/automato')
 def automato_page():
-
 
     def avancar():
         try:
@@ -196,7 +189,7 @@ def automato_page():
 
         state['pilha'] = passo.pilha
         state['indice'] = passo.posicaoFita
-        state['palavra'] = palavra
+        state['palavra'] = palavra + '/'
         renderizar()
 
     state = {
@@ -206,7 +199,6 @@ def automato_page():
     }
 
     def renderizar():
-        # Limpa e renderiza a fita e pilha
         fita_area.clear()
         pilha_area.clear()
 
@@ -226,12 +218,9 @@ def automato_page():
 
 
 
-
-
-
     with ui.row().classes('items-center'):
         i_palavra = ui.input(label="Digite a palavra")
-        feed = ui.label (f"Feedback = ")
+        feed = ui.label (f"Feedback = ").classes('text-xl')
     ui.button("Inserir palavra", on_click=inserirPalavra)
 
     with ui.row():
@@ -242,8 +231,8 @@ def automato_page():
     ui.button.disable(a)
     ui.button.disable(r)
 
-    grafo = ui.html("", sanitize=False)
-    gerar(grafo)
+    svg = gerarSvgAutomato(automato)
+    grafo = ui.html(svg, sanitize=False)
     #ui.space().classes("h-16")
 
     with ui.row().classes('items-start w-full'):
