@@ -1,11 +1,11 @@
 # Simulador Autômato Finito Determístico com Pilha 
 # M = (Σ, Q, δ, q0, F, V)
-# Σ alfabeto de símbolos de entrada
-# Q conjunto finito de estados
-# δ função programa ou função de transição
-# q0 estado inicial do autômato tal que q0 ∈ Q
-# F conjunto de estados finais tal que F ⊆ Q
-# V alfabeto auxiliar ou alfabeto da pilha
+# Σ = alfabeto de símbolos de entrada
+# Q = conjunto finito de estados
+# δ = função programa ou função de transição
+# q0 = estado inicial do autômato tal que q0 ∈ Q
+# F = conjunto de estados finais tal que F ⊆ Q
+# V = alfabeto auxiliar ou alfabeto da pilha
 
 # Uma palavra é aceita caso a simulação termine em um Estado Final e a fita estiver completamente consuminda, 
 # independentemente do estado final da pilha

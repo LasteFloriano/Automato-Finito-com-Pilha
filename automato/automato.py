@@ -44,16 +44,16 @@ class Automato:
             for chave in transicoesRemover:
                 self.removerTransicao(*chave)
 
-            if estado in self.estadosFinais:
-                self.estadosFinais.remove(estado)
+            #if estado in self.estadosFinais:
+                #self.estadosFinais.remove(estado)
             if self.estadoInicial == estado:
                 self.estadoInicial = None
             self.estados.remove(estado)
     
     def inserirEstadoInicial(self, estado):
-        self.estadoInicial = estado
         if estado not in self.estados:
-            self.estados.add(estado)
+            raise ValueError(f"Estado {estado} não exsite")
+        self.estadoInicial = estado
     
     def removerEstadoInicial(self):
         self.estadoInicial = None
@@ -61,7 +61,7 @@ class Automato:
     def inserirEstadosFinais(self, *estados):
         for estado in estados:
             if estado not in self.estados:
-                self.estados.add(estado)
+                raise ValueError(f"Estado {estado} não existe")
             self.estadosFinais.add(estado)
 
     # Apenas remove como sendo um Estado Final, o estado continua existindo
@@ -116,7 +116,7 @@ class Automato:
             for simbolo in palavraGravadaPilha:
                 if simbolo not in self.alfabetoPilha or simbolo in self.RESERVADOS:
                     raise ValueError(f"Símbolo {simbolo} não pertence ao alfabeto da pilha")
-        elif palavraGravadaPilha not in self.alfabetoPilha and palavraGravadaPilha not in self.RESERVADOS:
+        elif palavraGravadaPilha not in self.alfabetoPilha and palavraGravadaPilha != "ε":
             raise ValueError(f"Símbolo {palavraGravadaPilha} não pertence ao alfabeto da pilha")
 
             
